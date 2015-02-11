@@ -1,0 +1,32 @@
+﻿<Window x:Class="Dyysh.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
+        xmlns:local="clr-namespace:Dyysh.ContextMenuCommands"
+        ShowInTaskbar="False" ShowActivated="False" 
+        AllowsTransparency="True" WindowStyle="None"
+        Background="Transparent" Width="0" Height="0"
+        Closing="Window_Closing" Loaded="Window_Loaded">
+    <Window.Resources>
+        <local:CaptureArea x:Key="CaptureArea" />
+    </Window.Resources>
+        <tb:TaskbarIcon x:Name="notifyIcon"
+                    x:FieldModifier="public"
+                    Visibility="Visible"
+                    ToolTipText="Dyysh Image Sharing"
+                    IconSource="/traylogo.ico"
+                    LeftClickCommand="{StaticResource CaptureArea}"
+                    TrayBalloonTipClicked="TrayBalloonTipClicked">
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Publish Desktop Area" Click="PublishDesktop_Click"/>
+                    <MenuItem Header="Publish File" Click="PublishFile_Click"/>
+                    <MenuItem Header="Publish Clipboard" Click="PublishClipboard_Click"/>
+                    <MenuItem Header="Manage Library" Click="ManageLibrary_Click"/>
+                    <Separator/>
+                    <MenuItem Header="Settings" Click="Settings_Click"/>
+                    <MenuItem Header="Exit" Click="Exit_Click"/>
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+        </tb:TaskbarIcon>
+</Window>
