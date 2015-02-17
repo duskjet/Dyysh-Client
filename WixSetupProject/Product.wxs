@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" Name="Dyysh Image Sharing" Language="1033" Version="1.0.0.0" Manufacturer="Ivan Belikov" UpgradeCode="be04d5a0-621a-4388-95e0-d41c8dca2630">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+	<Product Id="*" Name="Dyysh Image Sharing" Language="1033" Version="!(bind.FileVersion.MainExe)" Manufacturer="Ivan Belikov" UpgradeCode="be04d5a0-621a-4388-95e0-d41c8dca2630">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
     
     <UI>
@@ -18,11 +19,11 @@
     <!-- Custom action to launch application -->
     <Property Id="WixShellExecTarget" Value="[#Dyysh.exe]" />
     <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
-    
+
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed."  />
 		<MediaTemplate EmbedCab="yes"/>
 
-		<Feature Id="ProductFeature" Title="WixSetupProject" Level="1">
+		<Feature Id="ProductFeature" Title="Dyysh Setup" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />
 		</Feature>
 	</Product>
@@ -32,14 +33,46 @@
 			<Directory Id="ProgramFilesFolder">
 				<Directory Id="INSTALLFOLDER" Name="Dyysh Image Sharing" />
 			</Directory>
+    <Directory Id="DesktopFolder" Name="Desktop"/>
 		</Directory>
 	</Fragment>
 
 	<Fragment>
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
 			<Component Id="ProductComponent">
-        <File Source="$(var.Dyysh.TargetPath)"/>
+        <File Id="MainExe" Source="$(var.Dyysh.TargetPath)"/>
 			</Component>
+      <ComponentRef Id="ApplicationDesktopShortcut"/>
 		</ComponentGroup>
 	</Fragment>
+
+  <!-- Define Desktop Shortcut -->
+  <Fragment>
+    <DirectoryRef Id="DesktopFolder">
+
+      <!-- Generate Your Own GUID -->
+      <Component Id="ApplicationDesktopShortcut" Guid="*">
+        <Shortcut Id="Dyysh_DesktopShortcut"
+        Name="Dyysh"
+        Description="Dyysh Image Sharing"
+        Target="[INSTALLFOLDER]Dyysh.exe"
+        WorkingDirectory="INSTALLFOLDER"/>
+
+        <RegistryValue Root="HKCU" Key="Software\Dyysh\DesktopShortcut"
+        Name="installed"
+        Type="integer"
+        Value="1"
+        KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment>
+    <!-- Sets to 1 if .NET Framework 4.5 or later is installed. -->
+    <PropertyRef Id="WIX_IS_NETFRAMEWORK_45_OR_LATER_INSTALLED"/>
+    
+    <Condition Message="This application requires .NET Framework 4.5 or later. Please install the .NET Framework then run this installer again.">
+      <![CDATA[Installed OR WIX_IS_NETFRAMEWORK_45_OR_LATER_INSTALLED]]>
+    </Condition>
+  </Fragment>
 </Wix>
