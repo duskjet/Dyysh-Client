@@ -4,7 +4,7 @@
         xmlns:Properties="clr-namespace:Dyysh.Properties" x:Class="Dyysh.SettingsWindow"
         xmlns:Local="clr-namespace:Dyysh" 
         Name="Settings_Window"
-        Title="Dyysh - Settings" Height="471" Width="285"
+        Title="Dyysh - Settings" Height="471" Width="276.333"
         Closed="OnClosed" Activated="Window_Activated" Initialized="Window_Initialized" ResizeMode="NoResize">
     <Window.Resources>
         <Properties:Settings x:Key="Settings" />
@@ -29,12 +29,12 @@
                 <Label Content="Uploading as:" HorizontalAlignment="Left" Margin="10,141,0,0" VerticalAlignment="Top" FontSize="10"/>
                 <Label x:Name="account_Label_UploadAs" Content="N/A" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="105,141,0,0" FontSize="10" FontWeight="Bold" Padding="0,5"/>
                 <Button x:Name="account_Button_ConnectionSettings" HorizontalAlignment="Left" Margin="199,78,0,0" VerticalAlignment="Top" Width="26" Click="account_Button_ConnectionSettings_Click">
-                    <Image Source="/gear_32xLG.png" Height="16"/>
+                    <Image Source="/Resources/icons/png/gear_32xLG.png" Height="16"/>
                 </Button>
                 <ProgressBar x:Name="account_ProgressBar" HorizontalAlignment="Left" Height="10" Margin="10,84,0,0" VerticalAlignment="Top" Width="84" IsIndeterminate="True" Visibility="Hidden"/>
             </Grid>
         </GroupBox>
-        <GroupBox Header="General" Margin="10,0,19,60" Height="176" VerticalAlignment="Bottom">
+        <GroupBox Header="General" Margin="10,0,0,60" Height="176" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="250">
             <Grid Margin="0,0,0,0">
                 <CheckBox x:Name="CheckBox_UseEditor" Content="Use Editor/Preview Screen" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"
                           IsChecked="{Binding Source={StaticResource Settings}, Path=Default.UseEditor, Mode=OneWay}"/>
@@ -53,8 +53,8 @@
             </Grid>
         </GroupBox>
 
-        <Button x:Name="Button_Done" Content="Done" Margin="185,0,19,23" Click="Button_Done_Click" Height="22" VerticalAlignment="Bottom"/>
-        <Button x:Name="Button_Defaults" Content="Defaluts" Margin="10,0,194,23" Height="22" VerticalAlignment="Bottom"/>
+        <Button x:Name="Button_Done" Content="Done" Margin="185,0,0,17" Click="Button_Done_Click" Height="22" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="75"/>
+        <Button x:Name="Button_Defaults" Content="Defaluts" Margin="10,0,0,17" Height="22" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="75"/>
 
     </Grid>
 </Window>

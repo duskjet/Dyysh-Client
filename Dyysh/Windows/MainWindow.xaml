@@ -14,7 +14,7 @@
                     x:FieldModifier="public"
                     Visibility="Visible"
                     ToolTipText="Dyysh Image Sharing"
-                    IconSource="/traylogo.ico"
+                    IconSource="/Resources/icons/ico/tray0.ico"
                     LeftClickCommand="{StaticResource CaptureArea}"
                     TrayBalloonTipClicked="TrayBalloonTipClicked">
             <tb:TaskbarIcon.ContextMenu>
