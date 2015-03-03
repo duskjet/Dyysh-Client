@@ -12,17 +12,9 @@ namespace Dyysh.ContextMenuCommands
     {
         public void Execute(object parameter)
         {
-            //var dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-            //dispatcherTimer.Tick += delegate(object s, EventArgs ev)
-            //{
-            //    dispatcherTimer.Stop();
-            //    var canvasWindow = new CanvasWindow();
-            //    canvasWindow.Show();
-            //};
-            //dispatcherTimer.Interval = new TimeSpan(0, 0, 0);
-            //dispatcherTimer.Start();
             var canvasWindow = new CanvasWindow();
             canvasWindow.Show();
+            canvasWindow.Activate();
         }
 
         public bool CanExecute(object parameter)

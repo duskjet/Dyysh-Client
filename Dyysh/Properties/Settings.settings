@@ -27,7 +27,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="ConnectionURL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://109.254.68.129</Value>
+      <Value Profile="(Default)">http://clip.apael.com</Value>
     </Setting>
     <Setting Name="UpgradeRequired" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>

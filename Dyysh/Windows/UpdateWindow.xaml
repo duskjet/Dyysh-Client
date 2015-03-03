@@ -1,13 +1,13 @@
 ﻿<Window x:Class="Dyysh.Windows.UpdateWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Height="155" Width="322" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize">
+        Height="166" Width="344.852" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize">
     <Grid>
-        <Button Name="Button_Changelog" Content="Changelog" Margin="10,91,229,9" Click="Button_Changelog_Click" Width="75" Height="22"/>
-        <Button Name="Button_UpdateNow" Content="Update Now" Margin="229,91,10,9" Click="Button_UpdateNow_Click" Width="75" Height="22"/>
-        <Button Name="Button_UpdateLater" Content="Update Later" Margin="149,91,90,9" Click="Button_UpdateLater_Click" Width="75" Height="22"/>
+        <Button Name="Button_Changelog" Content="Changelog" Margin="10,100,237,10" Click="Button_Changelog_Click"/>
+        <Button Name="Button_UpdateNow" Content="Update Now" Margin="237,100,10,10" Click="Button_UpdateNow_Click"/>
+        <Button Name="Button_UpdateLater" Content="Update Later" Margin="140,100,107,10" Click="Button_UpdateLater_Click"/>
 
-        <TextBlock TextWrapping="WrapWithOverflow" Name="Label_UpdateText" Margin="12,22,10,58" Width="294" Height="44"/>
+        <TextBlock TextWrapping="WrapWithOverflow" Name="Label_UpdateText" Margin="24,20,21,55" Width="294"/>
         <ProgressBar Name="ProgressBar" Visibility="Hidden" Margin="10,71,10,37"/>
 
     </Grid>

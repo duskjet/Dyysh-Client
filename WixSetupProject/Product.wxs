@@ -18,7 +18,7 @@
     
     <!-- Custom action to launch application -->
     <Property Id="WixShellExecTarget" Value="[#Dyysh.exe]" />
-    <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
+    <CustomAction Id="LaunchApplication" Directory="INSTALLFOLDER" ExeCommand="[SystemFolder]cmd.exe /C start Dyysh.exe" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed."  />
 		<MediaTemplate EmbedCab="yes"/>

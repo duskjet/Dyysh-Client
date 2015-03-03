@@ -55,6 +55,7 @@ namespace Dyysh
                 dispatcherTimer.Stop();
                 var canvasWindow = new CanvasWindow();
                 canvasWindow.Show();
+                canvasWindow.Activate();
             };
         }
 
