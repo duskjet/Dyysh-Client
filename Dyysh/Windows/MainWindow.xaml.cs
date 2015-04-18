@@ -7,6 +7,8 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Linq;
 using System.Windows.Interop;
+using NHotkey.Wpf;
+using Dyysh.HotkeyBinding;
 
 namespace Dyysh
 {
@@ -43,23 +45,28 @@ namespace Dyysh
             TrayAnimation.Init();
         }
 
+
+
         #region ContextMenu Click Events
         private void PublishDesktop_Click(object sender, RoutedEventArgs e)
         {
-            var dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-            dispatcherTimer.Interval = new TimeSpan(0,0,1);
-            dispatcherTimer.Start();
+            PublishDesktop();
+        }
 
-            dispatcherTimer.Tick += delegate(object s, EventArgs ev)
-            {
-                dispatcherTimer.Stop();
-                var canvasWindow = new CanvasWindow();
-                canvasWindow.Show();
-                canvasWindow.Activate();
-            };
+        public void PublishDesktop()
+        {
+            var canvasWindow = new CanvasWindow();
+            canvasWindow.Show();
+            canvasWindow.Activate();
         }
 
         private void PublishFile_Click(object sender, RoutedEventArgs e)
+        {
+            PublishFile();
+            
+        }
+
+        public void PublishFile()
         {
             string filePath;
 
@@ -69,23 +76,28 @@ namespace Dyysh
 
             var result = openFileDialog.ShowDialog(Application.Current.MainWindow as MainWindow);
             if (result == true)
-                {
-                    filePath = openFileDialog.FileName;
+            {
+                filePath = openFileDialog.FileName;
 
-                    BitmapSource image;
+                BitmapSource image;
 
-                    using (var bitmap = new Bitmap(filePath))
-                        image = Conversion.BitmapToSource(bitmap);
-                    //image = new BitmapImage( new Uri(filePath) );
+                using (var bitmap = new Bitmap(filePath))
+                    image = Conversion.BitmapToSource(bitmap);
+                //image = new BitmapImage( new Uri(filePath) );
 
-                    // Open new designer window
-                    var designer = new Dyysh.Windows.DesignerWindow(image);
-                    designer.Show();
-                }
-            
+                // Open new designer window
+                var designer = new Dyysh.Windows.DesignerWindow(image);
+                designer.Show();
+            }
         }
 
         private void PublishClipboard_Click(object sender, RoutedEventArgs e)
+        {
+            PublishClipboard();
+
+        }
+
+        public void PublishClipboard()
         {
             BitmapSource image;
 
@@ -108,7 +120,6 @@ namespace Dyysh
             // Open new designer window
             var designer = new Dyysh.Windows.DesignerWindow(image);
             designer.Show();
-
         }
 
         private void ManageLibrary_Click(object sender, RoutedEventArgs e)
@@ -156,8 +167,101 @@ namespace Dyysh
             }
         }
 
+        public void PublishDesktopHotkey(object sender, NHotkey.HotkeyEventArgs e)
+        {
+            if (!KeyBindingProvider.IsRecording)
+            {
+                PublishDesktop();
+                e.Handled = true;
+            }
+        }
+
+        public void PublishFileHotkey(object sender, NHotkey.HotkeyEventArgs e)
+        {
+            if (!KeyBindingProvider.IsRecording)
+            {
+                PublishFile();
+                e.Handled = true;
+            }
+        }
+
+        public void PublishClipHotkey(object sender, NHotkey.HotkeyEventArgs e)
+        {
+            if (!KeyBindingProvider.IsRecording)
+            {
+                PublishClipboard();
+                e.Handled = true;
+            }
+        }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            // Load and assign saved hotkeys
+            var keyBind = new KeyBinding();
+            string setting;
+            bool gotHotkeyException = false;
+            
+            // Very crappy check for every hotkey
+            // TODO: refactor and add friendly exception handling
+            try
+            {
+                setting = Settings.Default.Hotkey_CaptureArea;
+                if (setting != null && setting != string.Empty)
+                {
+                    keyBind.FromString(setting);
+                    HotkeyManager.Current.AddOrReplace("CaptureArea", keyBind.Key, keyBind.ModifierKeys, PublishDesktopHotkey);
+                }
+            }
+            catch (NHotkey.HotkeyAlreadyRegisteredException exception)
+            {
+                HotkeyManager.Current.Remove(exception.Name);
+                gotHotkeyException = true;
+            }
+
+            try
+            {
+                setting = Settings.Default.Hotkey_PublishClip;
+                if (setting != null && setting != string.Empty)
+                {
+                    keyBind.FromString(setting);
+                    HotkeyManager.Current.AddOrReplace("PublishClip", keyBind.Key, keyBind.ModifierKeys, PublishClipHotkey);
+                }
+            }
+            catch (NHotkey.HotkeyAlreadyRegisteredException exception)
+            {
+                HotkeyManager.Current.Remove(exception.Name);
+                gotHotkeyException = true;
+            }
+
+            try
+            {
+                setting = Settings.Default.Hotkey_PublishFile;
+                if (setting != null && setting != string.Empty)
+                {
+                    keyBind.FromString(setting);
+                    HotkeyManager.Current.AddOrReplace("PublishFile", keyBind.Key, keyBind.ModifierKeys, PublishClipHotkey);
+                }
+            }
+            catch (NHotkey.HotkeyAlreadyRegisteredException exception)
+            {
+                HotkeyManager.Current.Remove(exception.Name);
+                gotHotkeyException = true;
+            }
+            
+            // Prompt message box to alert about hotkeys
+            if (gotHotkeyException)
+            {
+                if (MessageBox.Show("Some of the hotkeys are disabled because they are already registered somewhere else. Do you want to change them now? ('Yes' opens Settings window)",
+                    "Hotkey already registered.",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Error,
+                    MessageBoxResult.Yes) == MessageBoxResult.Yes)
+                {
+                    new SettingsWindow();
+                }
+            }
+
+            // Suggest user to log in
             if (Settings.Default.Username == string.Empty)
             {
                 if (MessageBox.Show("To upload something you'll need to log in from installed app (Tray Icon -> Settings). Would you like to do it now?", 

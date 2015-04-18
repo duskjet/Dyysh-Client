@@ -2,6 +2,7 @@
 using Dyysh.Properties;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -68,10 +69,10 @@ namespace Dyysh
 				_x = Math.Min(_currentPos.X, _startPos.X);
 				_y = Math.Min(_currentPos.Y, _startPos.Y);
 
-				_width = Math.Max(_currentPos.X, _startPos.X) - _x;
+				_width = Math.Max(_currentPos.X, _startPos.X) - _x + 1;
                 backRect.Width = rect.Width = _width + rectOffset * 2;
 
-                _height = Math.Max(_currentPos.Y, _startPos.Y) - _y;
+                _height = Math.Max(_currentPos.Y, _startPos.Y) - _y + 1;
                 backRect.Height = rect.Height = _height + rectOffset * 2;
 
 				canvas.Children.Clear();
@@ -105,15 +106,11 @@ namespace Dyysh
 		{
             if (_width * _height >= 9)
             {
-                canvas.Children.Clear();
                 this._isMouseDown = false;
-
-                // Force render for canvas to remove last child rectangles
-                canvas.Dispatcher.Invoke(delegate { }, DispatcherPriority.Render);
 
                 _x += this.Left;
 
-                BitmapSource image = Dyysh.Image.Capture.CaptureRegion((int)_x, (int)_y, (int)_width + 1, (int)_height + 1);
+                BitmapSource image = Dyysh.Image.Capture.CaptureRegion((int)_x, (int)_y, (int)_width, (int)_height);
 
                 if (Settings.Default.UseEditor)
                 {

@@ -29,8 +29,20 @@
     <Setting Name="ConnectionURL" Type="System.String" Scope="User">
       <Value Profile="(Default)">http://clip.apael.com</Value>
     </Setting>
-    <Setting Name="UpgradeRequired" Type="System.Boolean" Scope="Application">
+    <Setting Name="UpgradeRequired" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RunAtStartup" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Hotkey_CaptureArea" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Hotkey_PublishClip" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Hotkey_PublishFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

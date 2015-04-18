@@ -4,6 +4,9 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
+using Dyysh.HotkeyBinding;
+using NHotkey.Wpf;
+using System.Windows.Controls;
 
 namespace Dyysh
 {
@@ -15,7 +18,10 @@ namespace Dyysh
         private static SettingsWindow _instance = null;
         private string currentRootPath;
         private string appDataFolder;
+        private KeyBindingProvider keyBindProvider;
+        private Button pressedButton;
 
+        #region Dependency Properties
         public AuthorizeState AuthorizeState
         {
             get { return (AuthorizeState)GetValue(AuthorizeStateProperty); }
@@ -26,13 +32,56 @@ namespace Dyysh
         public static readonly DependencyProperty AuthorizeStateProperty =
             DependencyProperty.Register("AuthorizeState", typeof(AuthorizeState), typeof(SettingsWindow), new PropertyMetadata(AuthorizeState.Initial));
 
+        public KeyBinding Hotkey_CaptureArea
+        {
+            get { return (KeyBinding)GetValue(Hotkey_CaptureAreaProperty); }
+            set { SetValue(Hotkey_CaptureAreaProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TestHotkey.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty Hotkey_CaptureAreaProperty =
+            DependencyProperty.Register("Hotkey_CaptureArea", typeof(KeyBinding), typeof(SettingsWindow), new PropertyMetadata(null));
+
+
+        public KeyBinding Hotkey_PublishClip
+        {
+            get { return (KeyBinding)GetValue(Hotkey_PublishClipProperty); }
+            set { SetValue(Hotkey_PublishClipProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Hotkey_PublishClip.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty Hotkey_PublishClipProperty =
+            DependencyProperty.Register("Hotkey_PublishClip", typeof(KeyBinding), typeof(SettingsWindow), new PropertyMetadata(null));
+
+
+        public KeyBinding Hotkey_PublishFile
+        {
+            get { return (KeyBinding)GetValue(Hotkey_PublishFileProperty); }
+            set { SetValue(Hotkey_PublishFileProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Hotkey_PublishFile.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty Hotkey_PublishFileProperty =
+            DependencyProperty.Register("Hotkey_PublishFile", typeof(KeyBinding), typeof(SettingsWindow), new PropertyMetadata(null));
+
+        #endregion
+
+        #region Constructors
         public SettingsWindow()
         {
+            // Singleton implementation
             if (_instance == null)
             {
                 InitializeComponent();
                 _instance = this;
                 _instance.Show();
+
+                // Key binding provider init
+                keyBindProvider = new KeyBindingProvider();
+                keyBindProvider.OnBindingFinished += keyBindProvider_OnBindingFinished;
+
+                this.KeyDown += keyBindProvider.KeyDown_ExtEventHandler;
+                this.KeyUp += keyBindProvider.KeyUp_ExtEventHandler;
             }
             else
             {
@@ -41,19 +90,82 @@ namespace Dyysh
             }
         }
 
+        void keyBindProvider_OnBindingFinished(object source, EventArgs e)
+        {
+            var buttonName = pressedButton.Name;
+            switch (buttonName)
+            {
+                case "Button_Hotkey_CaptureArea":
+                    Hotkey_CaptureArea = keyBindProvider.CurrentKeyBinding;
+                    if (Hotkey_CaptureArea.Key != System.Windows.Input.Key.None)
+                        HotkeyManager.Current.AddOrReplace
+                            ("CaptureArea", Hotkey_CaptureArea.Key, Hotkey_CaptureArea.ModifierKeys, MainWindow.GetCurrentMainWindow.PublishDesktopHotkey);
+                    else
+                        HotkeyManager.Current.Remove("CaptureArea");
+                    break;
+
+                case "Button_Hotkey_PublishClip":
+                    Hotkey_PublishClip = keyBindProvider.CurrentKeyBinding;
+                    if (Hotkey_PublishClip.Key != System.Windows.Input.Key.None)
+                        HotkeyManager.Current.AddOrReplace
+                            ("PublishClip", Hotkey_PublishClip.Key, Hotkey_PublishClip.ModifierKeys, MainWindow.GetCurrentMainWindow.PublishClipHotkey);
+                    else
+                        HotkeyManager.Current.Remove("PublishClip");
+                    break;
+
+                case "Button_Hotkey_PublishFile":
+                    Hotkey_PublishFile = keyBindProvider.CurrentKeyBinding;
+                    if (Hotkey_PublishFile.Key != System.Windows.Input.Key.None)
+                        HotkeyManager.Current.AddOrReplace
+                            ("PublishFile", Hotkey_PublishFile.Key, Hotkey_PublishFile.ModifierKeys, MainWindow.GetCurrentMainWindow.PublishFileHotkey);
+                    else
+                        HotkeyManager.Current.Remove("PublishFile");
+                    break;
+
+                default:
+                    throw new NullReferenceException("There is no button with specified name.");
+            }
+        }
+        #endregion
+
         private void OnClosed(object sender, EventArgs e)
         {
+            // Clear singleton instance
             _instance = null;
         }
 
         private void Button_Done_Click(object sender, RoutedEventArgs e)
         {
-            //Saving settings only if Done was pressed
+            // Saving settings only when Done button was pressed
             Settings.Default.Username = account_TextBox_UsernameField.Text;
             Settings.Default.UseEditor = (bool)CheckBox_UseEditor.IsChecked;
             Settings.Default.SaveToDisk = (bool)savecopy_CheckBox_SavetoDisk.IsChecked;
             Settings.Default.SaveLocation = savecopy_TextBox_CurrentPathField.Text;
             Settings.Default.ImageFormat = ComboBox_ImageFormat.Text;
+
+            // Saving hotkeys
+            if (Hotkey_CaptureArea != null)
+                Settings.Default.Hotkey_CaptureArea = Hotkey_CaptureArea.ToString();
+            if (Hotkey_PublishClip != null)
+                Settings.Default.Hotkey_PublishClip = Hotkey_PublishClip.ToString();
+            if (Hotkey_PublishFile != null)
+                Settings.Default.Hotkey_PublishFile = Hotkey_PublishFile.ToString();
+
+            // Get Windows registry key responsible for running at startup
+            Microsoft.Win32.RegistryKey registryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey
+                    ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
+            // Set or delete "Run at startup" registry key
+            Settings.Default.RunAtStartup = (bool)CheckBox_Autorun.IsChecked;
+            if (Settings.Default.RunAtStartup)
+            {
+                registryKey.SetValue("Dyysh", System.Reflection.Assembly.GetEntryAssembly().Location);
+            }
+            else
+            {
+                if (registryKey.GetValue("Dyysh") != null)
+                    registryKey.DeleteValue("Dyysh");
+            }
 
             Settings.Default.Save();
 
@@ -87,6 +199,12 @@ namespace Dyysh
                 AuthorizeState = AuthorizeState.Granted;
                 account_Label_UploadAs.Content = Settings.Default.Username;
             }
+
+            // Hotkeys
+            Hotkey_CaptureArea = new KeyBinding(Settings.Default.Hotkey_CaptureArea);
+            Hotkey_PublishClip = new KeyBinding(Settings.Default.Hotkey_PublishClip);
+            Hotkey_PublishFile = new KeyBinding(Settings.Default.Hotkey_PublishFile);
+
             #endregion
         }
 
@@ -233,7 +351,14 @@ namespace Dyysh
         {
             var connectionSettings = new Dyysh.Windows.ConnectionSettings();
         }
-      
+
+        #region Hotkey Binding
+        private void Button_Hotkey_Click(object sender, RoutedEventArgs e)
+        {
+            pressedButton = e.Source as Button;
+            keyBindProvider.StartRecording();
+        }
+        #endregion
     }
 
 }

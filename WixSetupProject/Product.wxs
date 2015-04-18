@@ -66,13 +66,4 @@
       </Component>
     </DirectoryRef>
   </Fragment>
-
-  <Fragment>
-    <!-- Sets to 1 if .NET Framework 4.5 or later is installed. -->
-    <PropertyRef Id="WIX_IS_NETFRAMEWORK_45_OR_LATER_INSTALLED"/>
-    
-    <Condition Message="This application requires .NET Framework 4.5 or later. Please install the .NET Framework then run this installer again.">
-      <![CDATA[Installed OR WIX_IS_NETFRAMEWORK_45_OR_LATER_INSTALLED]]>
-    </Condition>
-  </Fragment>
 </Wix>

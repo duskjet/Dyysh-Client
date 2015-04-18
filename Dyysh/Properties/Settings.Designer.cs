@@ -131,16 +131,63 @@ namespace Dyysh.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool UpgradeRequired {
             get {
                 return ((bool)(this["UpgradeRequired"]));
             }
-            set
-            {
+            set {
                 this["UpgradeRequired"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RunAtStartup {
+            get {
+                return ((bool)(this["RunAtStartup"]));
+            }
+            set {
+                this["RunAtStartup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Hotkey_CaptureArea {
+            get {
+                return ((string)(this["Hotkey_CaptureArea"]));
+            }
+            set {
+                this["Hotkey_CaptureArea"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Hotkey_PublishClip {
+            get {
+                return ((string)(this["Hotkey_PublishClip"]));
+            }
+            set {
+                this["Hotkey_PublishClip"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Hotkey_PublishFile {
+            get {
+                return ((string)(this["Hotkey_PublishFile"]));
+            }
+            set {
+                this["Hotkey_PublishFile"] = value;
             }
         }
     }

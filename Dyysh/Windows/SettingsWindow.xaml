@@ -1,12 +1,14 @@
 ﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:Properties="clr-namespace:Dyysh.Properties" x:Class="Dyysh.SettingsWindow"
+        xmlns:Properties="clr-namespace:Dyysh.Properties"
         xmlns:Local="clr-namespace:Dyysh" 
-        Name="Settings_Window"
-        Title="Dyysh - Settings" Height="471" Width="276.333"
+        xmlns:HotkeyBinding="clr-namespace:Dyysh.HotkeyBinding" x:Class="Dyysh.SettingsWindow" 
+        x:Name="Settings_Window"
+        Title="Dyysh - Settings" Height="471" Width="535"
         Closed="OnClosed" Activated="Window_Activated" Initialized="Window_Initialized" ResizeMode="NoResize">
     <Window.Resources>
+        <HotkeyBinding:KeyBindingToStringCoverter x:Key="KeyBindingToStringCoverter"/>
         <Properties:Settings x:Key="Settings" />
         <Local:EnumToStringConverter x:Key="EnumToStringConverter"/>
     </Window.Resources>
@@ -17,14 +19,14 @@
 
                 <Label Content="Username" HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top"/>
                 <TextBox x:Name="account_TextBox_UsernameField" HorizontalAlignment="Left" Height="23" Margin="105,14,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"
-                         Text="{Binding Source={StaticResource Settings}, Path=Default.Username, Mode=OneWay}"/>
+					Text="{Binding Default.Username, Mode=OneWay, Source={StaticResource Settings}}"/>
 
                 <Label Content="Password" HorizontalAlignment="Left" Margin="10,42,0,0" VerticalAlignment="Top"/>
                 <PasswordBox x:Name="account_PasswordBox_PasswordField" HorizontalAlignment="Left" Height="23" Margin="105,45,0,0"  VerticalAlignment="Top" Width="120"/>
 
                 <Label Content="Upload Permission:" HorizontalAlignment="Left" Margin="10,118,0,0" VerticalAlignment="Top" FontSize="10"/>
                 <Label x:Name="account_Label_UploadStatus" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="105,118,0,0" FontSize="10" FontWeight="Bold" Padding="0,5"
-                       Content="{Binding AuthorizeState, ElementName=Settings_Window, Converter={StaticResource EnumToStringConverter}}"/>
+					Content="{Binding AuthorizeState, Converter={StaticResource EnumToStringConverter}, ElementName=Settings_Window}"/>
                 <GridSplitter HorizontalAlignment="Stretch" Height="1" Margin="5,112,5,0" VerticalAlignment="Top"/>
                 <Label Content="Uploading as:" HorizontalAlignment="Left" Margin="10,141,0,0" VerticalAlignment="Top" FontSize="10"/>
                 <Label x:Name="account_Label_UploadAs" Content="N/A" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="105,141,0,0" FontSize="10" FontWeight="Bold" Padding="0,5"/>
@@ -34,27 +36,40 @@
                 <ProgressBar x:Name="account_ProgressBar" HorizontalAlignment="Left" Height="10" Margin="10,84,0,0" VerticalAlignment="Top" Width="84" IsIndeterminate="True" Visibility="Hidden"/>
             </Grid>
         </GroupBox>
-        <GroupBox Header="General" Margin="10,0,0,60" Height="176" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="250">
+        <GroupBox Header="General" Margin="269,0,0,242" Height="190" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="250">
             <Grid Margin="0,0,0,0">
-                <CheckBox x:Name="CheckBox_UseEditor" Content="Use Editor/Preview Screen" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"
-                          IsChecked="{Binding Source={StaticResource Settings}, Path=Default.UseEditor, Mode=OneWay}"/>
-                <CheckBox x:Name="savecopy_CheckBox_SavetoDisk" Content="Save Copy to Disk" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" 
-                          Checked="savecopy_CheckBox_SavetoDisk_Checked" Unchecked="savecopy_CheckBox_SavetoDisk_Unchecked"
-                          IsChecked="{Binding Source={StaticResource Settings}, Path=Default.SaveToDisk, Mode=OneWay}"/>
-                <Button x:Name="savecopy_Button_Browse" Content="Browse" IsEnabled="False" HorizontalAlignment="Left" Margin="10,52,0,0" VerticalAlignment="Top" Width="45" Click="savecopy_Button_Browse_Click"/>
-                <Button x:Name="savecopy_Button_Reset" Content="Reset" IsEnabled="False" HorizontalAlignment="Left" Margin="60,52,0,0" VerticalAlignment="Top" Width="45" Click="savecopy_Button_Reset_Click"/>
-                <TextBox x:Name="savecopy_TextBox_CurrentPathField" IsEnabled="False" HorizontalAlignment="Left" Height="22" Margin="10,80,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="218" FontSize="10"
-                         Text="{Binding Source={StaticResource Settings}, Path=Default.SaveLocation, Mode=OneWay}"/>
-                <ComboBox x:Name="ComboBox_ImageFormat" HorizontalAlignment="Left" Margin="89,115,0,0" VerticalAlignment="Top" Width="53">
+                <CheckBox x:Name="CheckBox_Autorun" Content="Start with Windows" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"
+					IsChecked="{Binding Default.RunAtStartup, Mode=OneWay, Source={StaticResource Settings}}"/>
+                <CheckBox x:Name="CheckBox_UseEditor" Content="Use Editor/Preview Screen" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top"
+					IsChecked="{Binding Default.UseEditor, Mode=OneWay, Source={StaticResource Settings}}"/>
+                <CheckBox x:Name="savecopy_CheckBox_SavetoDisk" Content="Save Copy to Disk" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" 
+					Checked="savecopy_CheckBox_SavetoDisk_Checked" Unchecked="savecopy_CheckBox_SavetoDisk_Unchecked"
+					IsChecked="{Binding Default.SaveToDisk, Mode=OneWay, Source={StaticResource Settings}}"/>
+                <Button x:Name="savecopy_Button_Browse" Content="Browse" IsEnabled="False" HorizontalAlignment="Left" Margin="10,75,0,0" VerticalAlignment="Top" Width="45" Click="savecopy_Button_Browse_Click"/>
+                <Button x:Name="savecopy_Button_Reset" Content="Reset" IsEnabled="False" HorizontalAlignment="Left" Margin="60,75,0,0" VerticalAlignment="Top" Width="45" Click="savecopy_Button_Reset_Click"/>
+                <TextBox x:Name="savecopy_TextBox_CurrentPathField" IsEnabled="False" HorizontalAlignment="Left" Height="22" Margin="10,100,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="218" FontSize="10"
+					Text="{Binding Default.SaveLocation, Mode=OneWay, Source={StaticResource Settings}}"/>
+                <ComboBox x:Name="ComboBox_ImageFormat" HorizontalAlignment="Left" Margin="89,135,0,0" VerticalAlignment="Top" Width="53">
                     <ComboBoxItem Content="PNG" />
                     <ComboBoxItem Content="JPG"/>
                 </ComboBox>
-                <Label Content="Image Format" HorizontalAlignment="Left" Margin="10,113,0,0" Padding="0,5" VerticalAlignment="Top"/>
+                <Label Content="Image Format" HorizontalAlignment="Left" Margin="10,137,0,0" Padding="0" VerticalAlignment="Top"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Hotkeys" Margin="10,205,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="190" Width="331">
+            <Grid Margin="0">
+                <TextBlock Text="Capture Area" Width="75" Height="22" Margin="10,14,235,132"/>
+                <Button x:Name="Button_Hotkey_CaptureArea" Content="{Binding Hotkey_CaptureArea, Converter={StaticResource KeyBindingToStringCoverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Local:SettingsWindow}}}" Margin="109,14,10,132" Click="Button_Hotkey_Click"/>
+                <TextBlock Text="Publish Clipboard" Height="22" Margin="10,50,215,96"/>
+                <Button x:Name="Button_Hotkey_PublishClip" Content="{Binding Hotkey_PublishClip, Converter={StaticResource KeyBindingToStringCoverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Local:SettingsWindow}}}" Margin="109,50,10,96" Click="Button_Hotkey_Click"/>
+                <TextBlock Text="Publish File" Width="75" Height="22" Margin="10,86,234,60"/>
+                <Button x:Name="Button_Hotkey_PublishFile" Content="{Binding Hotkey_PublishFile, Converter={StaticResource KeyBindingToStringCoverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Local:SettingsWindow}}}" Margin="109,86,10,60" Click="Button_Hotkey_Click"/>
             </Grid>
         </GroupBox>
 
-        <Button x:Name="Button_Done" Content="Done" Margin="185,0,0,17" Click="Button_Done_Click" Height="22" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="75"/>
-        <Button x:Name="Button_Defaults" Content="Defaluts" Margin="10,0,0,17" Height="22" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="75"/>
+        <Button x:Name="Button_Done" Content="Done" Margin="364,0,0,10" Click="Button_Done_Click" Height="22" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="75"/>
+        <Button x:Name="Button_Defaults" Content="Defaluts" Margin="10,0,0,10" Height="22" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="75"/>
+        <Button x:Name="Button_Cancel" Content="Cancel" Margin="444,0,0,10" Click="Button_Done_Click" Height="22" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="75"/>
 
     </Grid>
 </Window>
