@@ -12,7 +12,10 @@ namespace Dyysh.HotkeyBinding
 
         public void KeyDown_ExtEventHandler(object sender, KeyEventArgs e)
         {
-            e.Handled = true;
+            if (keyHandleOverriden)
+                e.Handled = true;
+            else
+                e.Handled = false;
 
             if (isRecording)
             {
@@ -46,7 +49,10 @@ namespace Dyysh.HotkeyBinding
 
         public void KeyUp_ExtEventHandler(object sender, KeyEventArgs e)
         {
-            e.Handled = true;
+            if (keyHandleOverriden)
+                e.Handled = true;
+            else
+                e.Handled = false;
 
             if (isRecording)
             {
@@ -63,6 +69,8 @@ namespace Dyysh.HotkeyBinding
                 {
                     CurrentKeyBinding = new KeyBinding(_key, _modKeys);
 
+                    keyHandleOverriden = false;
+
                     isRecording = false;
                     IsRecording = false;
 
@@ -77,6 +85,7 @@ namespace Dyysh.HotkeyBinding
             _modKeys = ModifierKeys.None;
             CurrentKeyBinding = null;
 
+            keyHandleOverriden = true;
             isRecording = true;
             IsRecording = true;
         }
@@ -84,6 +93,7 @@ namespace Dyysh.HotkeyBinding
         private Key _key;
         private ModifierKeys _modKeys;
         private bool isRecording = false;
+        private bool keyHandleOverriden = false;
 
         private bool IsModifierKey(Key key)
         {

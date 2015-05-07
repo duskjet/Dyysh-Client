@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Properties="clr-namespace:Dyysh.Properties"
         xmlns:Local="clr-namespace:Dyysh" 
-        xmlns:HotkeyBinding="clr-namespace:Dyysh.HotkeyBinding" x:Class="Dyysh.SettingsWindow" 
+        xmlns:HotkeyBinding="clr-namespace:Dyysh.HotkeyBinding" xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="Dyysh.SettingsWindow" 
         x:Name="Settings_Window"
         Title="Dyysh - Settings" Height="471" Width="535"
         Closed="OnClosed" Activated="Window_Activated" Initialized="Window_Initialized" ResizeMode="NoResize">
@@ -11,6 +11,8 @@
         <HotkeyBinding:KeyBindingToStringCoverter x:Key="KeyBindingToStringCoverter"/>
         <Properties:Settings x:Key="Settings" />
         <Local:EnumToStringConverter x:Key="EnumToStringConverter"/>
+        <System:String x:Key="HotkeyTip0">To assign hotkey, press the button and then desired keys.</System:String>
+        <System:String x:Key="HotkeyTip1">To remove hotkey, press the button and press Backspace.</System:String>
     </Window.Resources>
     <Grid>
         <GroupBox Header="Account" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="190" Width="250">
@@ -64,6 +66,8 @@
                 <Button x:Name="Button_Hotkey_PublishClip" Content="{Binding Hotkey_PublishClip, Converter={StaticResource KeyBindingToStringCoverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Local:SettingsWindow}}}" Margin="109,50,10,96" Click="Button_Hotkey_Click"/>
                 <TextBlock Text="Publish File" Width="75" Height="22" Margin="10,86,234,60"/>
                 <Button x:Name="Button_Hotkey_PublishFile" Content="{Binding Hotkey_PublishFile, Converter={StaticResource KeyBindingToStringCoverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Local:SettingsWindow}}}" Margin="109,86,10,60" Click="Button_Hotkey_Click"/>
+                <TextBlock HorizontalAlignment="Left" Margin="10,126,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="{DynamicResource HotkeyTip0}"/>
+                <TextBlock HorizontalAlignment="Left" Margin="10,142,0,0" TextWrapping="Wrap" Text="{DynamicResource HotkeyTip1}" VerticalAlignment="Top"/>
             </Grid>
         </GroupBox>
 
