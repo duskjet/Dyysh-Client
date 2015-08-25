@@ -55,7 +55,7 @@ namespace Dyysh
 
         public void PublishDesktop()
         {
-            var canvasWindow = new CanvasWindow();
+            var canvasWindow = new CanvasWindow(new CaptureGDI());
             canvasWindow.Show();
             canvasWindow.Activate();
         }

@@ -28,12 +28,15 @@ namespace Dyysh
         private bool _isMouseDown = false;
         private object _mouseLock = new object();
 
+        private ICaptureProvider captureProvider;
 
-        public CanvasWindow()
+        public CanvasWindow(ICaptureProvider captureProvider)
 		{
 			InitializeComponent();
 
-            ImageBrush brush = new ImageBrush(Capture.CaptureFullScreen());
+            this.captureProvider = captureProvider;
+
+            ImageBrush brush = new ImageBrush(captureProvider.CaptureFullScreen());
             brush.Freeze();
             this.Background = brush;
 
@@ -110,7 +113,7 @@ namespace Dyysh
 
                 _x += this.Left;
 
-                BitmapSource image = Dyysh.Image.Capture.CaptureRegion((int)_x, (int)_y, (int)_width, (int)_height);
+                BitmapSource image = captureProvider.CaptureArea(new Int32Rect((int)_x, (int)_y, (int)_width, (int)_height));
 
                 if (Settings.Default.UseEditor)
                 {

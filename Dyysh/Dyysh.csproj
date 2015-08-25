@@ -161,7 +161,9 @@
     <Compile Include="HotkeyBinding\KeyBindingToStringConverter.cs" />
     <Compile Include="Http.cs" />
     <Compile Include="Image\Capture.cs" />
+    <Compile Include="Image\CaptureGDI.cs" />
     <Compile Include="Image\Conversion.cs" />
+    <Compile Include="Image\ICaptureProvider.cs" />
     <Compile Include="Image\InteropHeleprs.cs" />
     <Compile Include="Image\Thumbnail.cs" />
     <Compile Include="Security\KeyContainer.cs" />

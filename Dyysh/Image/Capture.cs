@@ -5,7 +5,7 @@ using System.Windows.Media.Imaging;
 
 namespace Dyysh.Image
 {
-
+    [Obsolete("Deprecated. Use CaptureGDI instead.", error: true)]
     class Capture
     {
         public static Screen[] allScreens = Screen.AllScreens;
@@ -35,7 +35,7 @@ namespace Dyysh.Image
             try
             {
                 // gets the main desktop and all open windows
-                sourceDC = User32.GetDC(User32.GetDesktopWindow());
+                sourceDC = User32.GetDC(IntPtr.Zero);
                 //sourceDC = User32.GetDC(hWnd);
                 targetDC = Gdi32.CreateCompatibleDC(sourceDC);
 

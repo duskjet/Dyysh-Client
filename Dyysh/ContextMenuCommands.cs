@@ -12,7 +12,7 @@ namespace Dyysh.ContextMenuCommands
     {
         public void Execute(object parameter)
         {
-            var canvasWindow = new CanvasWindow();
+            var canvasWindow = new CanvasWindow(new Dyysh.Image.CaptureGDI());
             canvasWindow.Show();
             canvasWindow.Activate();
         }
